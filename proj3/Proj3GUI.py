@@ -7,7 +7,7 @@ import sys
 import time
 
 
-from which_pyqt import PYQT_VER
+from proj3.which_pyqt import PYQT_VER
 if PYQT_VER == 'PYQT5':
 	from PyQt5.QtWidgets import *
 	from PyQt5.QtGui import *
@@ -24,8 +24,8 @@ else:
 
 
 # Import in the code with the actual implementation
-from CS4412Graph import *
-from NetworkRoutingSolver import *
+from proj3.CS4412Graph import *
+from proj3.NetworkRoutingSolver import *
 
 
 BLACK = (0,0,0)
