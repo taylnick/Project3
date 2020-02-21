@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-from CS4412Graph import *
+from proj3.CS4412Graph import *
 import time
 
 
