@@ -13,6 +13,7 @@ class NetworkRoutingSolver:
         assert( type(network) == CS4412Graph )
         self.network = network
 
+# given a destination, look at the distance structure and reconstruct the path from the source to the given destination.
     def getShortestPath( self, destIndex ):
         self.dest = destIndex
         # TODO: RETURN THE SHORTEST PATH FOR destIndex
@@ -31,6 +32,9 @@ class NetworkRoutingSolver:
             edges_left -= 1
         return {'cost':total_length, 'path':path_edges}
 
+    # This function is running Dijkstras. The result is a dist data structure that has the cost of the shortest path from every node.
+    # THat's why the source is given as a parameter.
+    # This does not actually create paths.
     def computeShortestPaths( self, srcIndex, use_heap=False ):
         self.source = srcIndex
         t1 = time.time()
