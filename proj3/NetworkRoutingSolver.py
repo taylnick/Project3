@@ -2,6 +2,7 @@
 
 
 from proj3.CS4412Graph import *
+from proj3.arrays import *
 import time
 
 
@@ -41,7 +42,28 @@ class NetworkRoutingSolver:
         # TODO: RUN DIJKSTRA'S TO DETERMINE SHORTEST PATHS.
         #       ALSO, STORE THE RESULTS FOR THE SUBSEQUENT
         #       CALL TO getShortestPath(dest_index)
-        
+        nodes = self.network.nodes
+        dist = [float("inf")] * len(nodes)
+
+        if use_heap:
+            pq = binary_heap(dist, srcIndex)
+        else:
+            pq = unsorted_array(dist, srcIndex)
+
+        prev = [None] * len(nodes)
+
+        while not pq.is_empty():
+            curr = pq.delete_min()
+            for edge in curr.neighbors:
+                next_id = edge.dest.node_id
+                curr_id = curr.node_id
+                new_weight = pq[curr_id] + edge.length
+                if pq[next_id] > new_weight:
+                    pq[next_id] = new_weight
+                    prev[next_id] = curr_id
+                    pq.decrease_key(next_id, new_weight)
+
+
         t2 = time.time()
         return (t2-t1)
 
