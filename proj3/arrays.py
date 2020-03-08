@@ -6,34 +6,49 @@ class unsorted_array:
     def __init__(self, dist, src):
         self.size = len(dist)
         self.array = []
+
         for i in range(self.size):
-            self.array.append(dist[i])
+            self.insert(dist[i])
         self.decrease_key(src, 0)
 
     def is_empty(self):
         return self.size == 0
 
-    def insert(self, node):
-        self.array.append(node)
+    def insert(self, i):
+        self.array.append(i)
         self.size += 1
         pass
 
     # Returns node with min value freshly set to None
     def delete_min(self):
-        min_id = None
-        min_value = float("inf")
-        for index, value in enumerate(self.array):
-            if (value is not None) and (value < min_value):
-                min_id = index
-                min_value = value
-        self.decrease_key(min_id, None)
+        minIndex = 0
+        for i in range(self.size):
+            if self.array[i] < self.array[minIndex]:
+                minIndex = i
+
+        del self.array[minIndex]
         self.size -= 1
-        return min_id
+        return minIndex
+
+        # min_id = None
+        # min_value = float("inf")
+        # for index, value in enumerate(self.array):
+        #     if (value is not None) and (value < min_value):
+        #         min_id = index
+        #         min_value = value
+        #
+        # self.decrease_key(min_id, None)
+        # self.size -= 1
+        # return min_id
 
     def decrease_key(self, index, value):
         self.array[index] = value
 
-
+    def still_contains(self, i):
+        if self.array[i] is None:
+            return False
+        else:
+            return i <= self.size
 # Binary Heap class operations
 class binary_heap:
 
