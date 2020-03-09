@@ -4,51 +4,42 @@ from proj3.NetworkRoutingSolver import *
 
 class unsorted_array:
     def __init__(self, dist, src):
-        self.size = len(dist)
-        self.array = []
 
-        for i in range(self.size):
-            self.insert(dist[i])
+        self.size = len(dist)
+        self.length = len(dist)
+        self.array = [float("inf")] * self.size
+
         self.decrease_key(src, 0)
 
     def is_empty(self):
         return self.size == 0
 
-    def insert(self, i):
-        self.array.append(i)
-        self.size += 1
-        pass
-
     # Returns node with min value freshly set to None
     def delete_min(self):
         minIndex = 0
-        for i in range(self.size):
-            if self.array[i] < self.array[minIndex]:
-                minIndex = i
+        # Find the first index with an existing value
+        while self.array[minIndex] is None:
+            minIndex += 1
 
-        del self.array[minIndex]
+        minValue = self.array[minIndex]
+        for i in range(minIndex, self.length):
+            if self.array[i] is None:
+                continue
+            elif self.array[i] < minValue:
+                minIndex = i
+                minValue = self.array[minIndex]
+
+        self.array[minIndex] = None
         self.size -= 1
         return minIndex
-
-        # min_id = None
-        # min_value = float("inf")
-        # for index, value in enumerate(self.array):
-        #     if (value is not None) and (value < min_value):
-        #         min_id = index
-        #         min_value = value
-        #
-        # self.decrease_key(min_id, None)
-        # self.size -= 1
-        # return min_id
 
     def decrease_key(self, index, value):
         self.array[index] = value
 
-    def still_contains(self, i):
-        if self.array[i] is None:
-            return False
-        else:
-            return i <= self.size
+    # def still_contains(self, i):
+    #     return self.array[i] is not None
+
+
 # Binary Heap class operations
 class binary_heap:
 
@@ -64,12 +55,12 @@ class binary_heap:
     def is_empty(self):
         return self.size == 0
 
-    def still_contains(self, i):
-        pos = self.point_arr[i]
-        if pos is None:
-            return False
-        else:
-            return pos <= self.size
+    # def still_contains(self, i):
+    #     pos = self.point_arr[i]
+    #     if pos is None:
+    #         return False
+    #     else:
+    #         return pos <= self.size
 
     def insert(self, i, val):
         self.heapList.append(val)
@@ -77,17 +68,21 @@ class binary_heap:
         self.point_arr[i] = self.size
         self.percolate_up(i)
 
-# Should return the index of the node removed.
+    # Should return the index of the node removed.
     def delete_min(self):
+        # initialize values to find
         to_delete = self.point_arr.index(1)
-        node_id = self.point_arr.index(1)
-        self.point_arr[node_id] = None
+
+        self.point_arr[to_delete] = None
+        # Base case for removing the final node from the tree.
         if self.size == 1:
             self.heapList.pop()
             self.size -= 1
             return to_delete
 
-        self.heapList[1] = self.heapList[self.size]
+        # otherwise, take these steps to update the point_array
+        # and return the index of the removed node.
+        self.heapList[1] = self.heapList[self.size] # -1
         new_top = self.point_arr.index(self.size)
         self.point_arr[new_top] = 1
         self.size -= 1
@@ -104,11 +99,13 @@ class binary_heap:
         pos = self.point_arr[node_id]
         # while there is a parent
         while pos // 2 > 0:
+            parent = self.heapList[pos]
+            child = self.heapList[pos // 2]
             # if the child is weighted less than the parent
-            if self.heapList[pos] < self.heapList[pos // 2]:
+            if parent < child:
                 # Swap weights in the tree
-                temp = self.heapList[pos // 2]
-                self.heapList[pos // 2] = self.heapList[pos]
+                temp = child
+                self.heapList[pos // 2] = parent
                 self.heapList[pos] = temp
                 # Swap the position value of the two nodes.
                 swap_node = self.point_arr.index(pos // 2)

@@ -29,19 +29,12 @@ class NetworkRoutingSolver:
         #       NEED TO USE
         path_edges = []
         total_length = 0
-        # node = self.network.nodes[self.source]
-        # edges_left = 3
-        # while edges_left > 0:
-        #     edge = node.neighbors[2]
-        #     path_edges.append((edge.src.loc, edge.dest.loc, '{:.0f}'.format(edge.length)))
-        #     total_length += edge.length
-        #     node = edge.dest
-        #     edges_left -= 1
-        # return {'cost': total_length, 'path': path_edges}
 
         path = []
         src = self.prev[destIndex]
         dest = destIndex
+        if self.dist[dest] == float("inf"):
+            return {'cost': 'unreachable', 'path': path_edges}
         while src is not None:
             for edge in self.network.nodes[src].neighbors:
                 if dest == edge.dest.node_id:
@@ -53,30 +46,28 @@ class NetworkRoutingSolver:
             total_length += edge.length
 
         return {'cost': total_length, 'path': path_edges}
+
     # This function is running Dijkstras. The result is a dist data structure that has the cost of the shortest path
     # from every node. THat's why the source is given as a parameter. This does not actually create paths.
     def computeShortestPaths(self, srcIndex, use_heap=False):
 
-        t1 = time.time()
-        # TODO: RUN DIJKSTRA'S TO DETERMINE SHORTEST PATHS.
-        #       ALSO, STORE THE RESULTS FOR THE SUBSEQUENT
-        #       CALL TO getShortestPath(dest_index)
-        size = len(self.network.nodes)
+        self.dist[srcIndex] = 0
+        nodes = self.network.nodes
         if use_heap:
             pq = binary_heap(self.dist, srcIndex)
         else:
             pq = unsorted_array(self.dist, srcIndex)
 
-        self.dist[srcIndex] = 0
-        nodes = self.network.nodes
+        t1 = time.time()
+
         while not pq.is_empty():
             curr = pq.delete_min()
             for edge in nodes[curr].neighbors:
                 next_id = edge.dest.node_id
                 new_weight = self.dist[curr] + edge.length
 
-                if not pq.still_contains(next_id):
-                    continue
+                # if not pq.still_contains(next_id):
+                #     continue
                 if self.dist[next_id] > new_weight:
                     self.dist[next_id] = new_weight
                     self.prev[next_id] = curr

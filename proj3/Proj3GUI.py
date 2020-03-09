@@ -276,8 +276,9 @@ class Proj3GUI(QMainWindow):
             dist = heap_path['cost']
         self.display_paths(heap_path, heap_time, array_path, array_time)
         self.checkPathInputs()
-        if dist == float('inf'):
+        if dist == 'unreachable':
             self.totalCost.setText('UNREACHABLE')
+
         else:
             self.totalCost.setText('{:.3f}'.format(dist))
         self.view.clicknode = 'start'
